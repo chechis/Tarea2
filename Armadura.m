@@ -68,6 +68,7 @@ T_1= [eta mu 0 0;-mu eta 0 0;
 
 K_1=T_1'*k_1*T_1;
 
+
 %Elemento 2
 Ang_2=Ang(2);
 eta=cosd(Ang_2);
@@ -97,12 +98,14 @@ T_5= [ eta mu 0 0; -mu eta 0 0;
 K_5=T_5'*k_5*T_5;
 beta=0;
 eta=cosd(beta); mu=sind(beta);
+
 %Elemento 6
 T_6= [ eta mu 0 0; -mu eta 0 0;
 0 0 eta mu; 0 0 -mu eta];
 K_6=T_6'*k_6*T_6;
 beta=90;
 eta=cosd(beta); mu=sind(beta);
+
 %Elemento 7
 T_7= [ eta mu 0 0; -mu eta 0 0;
 0 0 eta mu; 0 0 -mu eta];

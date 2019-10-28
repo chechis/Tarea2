@@ -147,7 +147,7 @@ end
  %% Matriz de rigidez por elemento
  
 K=zeros(n*2, n*2);
-
+deltaK_x= zeros(n*2, n*2);
 
 for i = 1:barras
     
@@ -157,9 +157,7 @@ for i = 1:barras
 
     k_x=barraAxial(elasticidad,area,longitudes(i,1));
     K_x=t_x'*k_x*t_x;
-    
-    deltaK_x= zeros(n*2, n*2);
-    
+
     deltaK_x(g_x(i,:), g_x(i,:))=K_x;
     K= K + deltaK_x;
 end
