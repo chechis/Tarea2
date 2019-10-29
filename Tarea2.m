@@ -15,12 +15,24 @@ altura = 3;
 
 tramos = input('Ingrese la cantidad de tramos: ');
 
-%% grados de libertad globales
+%% grados de libertad globales y cargas
 if(tramos ==0)
     n = 4;
 elseif(tramos>0)
     n = 4+2*tramos;
 end
+
+p=[0 0 0 0 4 -20 0 0 0 -20 0 0]';
+
+% cantidadCargas = input('Ingrese la cantidad de cargas: ');
+% p= zeros(1, n*2);
+% for i = 1:cantidadCargas
+%    
+%     carga = input ('Ingrese la carga: ');
+%     cargaPos=input ('Ingrese la posicion de la carga en el gdl: ');
+%     p(1, cargaPos)= carga;
+%     
+% end
 
 gdl= zeros(n,2);
 
@@ -148,7 +160,6 @@ end
  
 K=zeros(n*2, n*2);
 
-
 for i = 1:barras
     
     ang_x=ang(i);
@@ -164,29 +175,71 @@ for i = 1:barras
     K= K + deltaK_x;
 end
 
+%% Grados de libertar libres y restringidos
+a=[1 2 gdl(n,:)]; 
+b= zeros(1, n-4);
+for i = 1:2*n-4
+    b(1,i)= i+2;
+end
 
- 
+k_aa = K(a,a); k_ab=K(a,b); k_ba=K(b,a); k_bb=K(b,b); 
 
- 
- %% Funcion para la rigidez de una barra
- 
- function [k]=barraAxial(E,A,Le)
+p_b= p(b);
 
-k=E*A/Le*[1 0 -1 0
+D_b=k_bb\p_b;
+P_a=k_ab*D_b;
+
+D=zeros(n*2,1);
+D(b)=D_b; 
+
+%% Esfuerzos internos
+sigmas = zeros(barras, 1);
+for i= 1:barras
+
+    D_x = D(g_x(i,:));
+    sigmas(i,1) = sigma_x(ang(i,1),elasticidad, D_x, longitudes(i,1));
+end
+
+%% Fuerzas 
+N_x = zeros(barras, 1);
+for i = 1:barras
+N_x(i,1) = area*sigmas(i,1);
+end
+
+%% Plotear deformacion
+
+xydef = zeros(size(xy));
+fac = 500;
+c=0;
+
+for i =1:6
+    c=c+1;
+    xydef(i,1)= xy(i,1)+fac*D(c);
+    c=c+1;
+    xydef()= xy()+fac*D(c);   
+end
+%% Funciones
+
+ function [sigma_xx]=sigma_x(beta, E, D_x, L)
+
+    eta=cosd(beta);
+    mu = sind(beta);
+    sigma_xx= E*[-eta -mu eta mu]*D_x/L;
+ end
+
+function [k]=barraAxial(E,A,Le)
+
+    k=E*A/Le*[1 0 -1 0
           0 0 0 0
           -1 0 1 0
           0 0 0 0];
- end
+end
  
- function [t]=t_xx(ang_x)
+function [t]=t_xx(ang_x)
 
-eta=cosd(ang_x);
-mu = sind(ang_x);
-t=[eta mu 0 0; -mu eta 0 0;
-    0 0 eta mu; 0 0 -mu eta];
- end
- 
- 
- 
- 
+    eta=cosd(ang_x);
+    mu = sind(ang_x);
+    t=[eta mu 0 0; -mu eta 0 0;
+        0 0 eta mu; 0 0 -mu eta];
+end
  

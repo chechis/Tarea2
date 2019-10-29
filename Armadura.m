@@ -1,8 +1,8 @@
 
-% Como ejemplo, consideremos la armadura metálica mostrada en la figura anterior
-%sometida a la acción % de dos cargas verticales y una horizontal. 
-%Todas las barras tienen un módulo de elasticidad E = 2 ×10^8kN/m2 
-%y un área seccional A = 0.005m2
+% Como ejemplo, consideremos la armadura metï¿½lica mostrada en la figura anterior
+%sometida a la acciï¿½n % de dos cargas verticales y una horizontal. 
+%Todas las barras tienen un mï¿½dulo de elasticidad E = 2 ï¿½10^8kN/m2 
+%y un ï¿½rea seccional A = 0.005m2
 %%
 close all
 clear all
@@ -187,9 +187,11 @@ D=zeros(12,1);
 D(b)=D_b;
 %% Esfuerzos Internos
 beta=0;
+
 eta=cosd(beta); mu=sind(beta);
 D_1=D(g_1);
 sigma_1=E*[-eta -mu eta mu]*D_1/l_1;
+
 beta=36.87;
 eta=cosd(beta); mu=sind(beta);
 D_2=D(g_2);
@@ -223,15 +225,15 @@ eta=cosd(beta); mu=sind(beta);
 D_9=D(g_9);
 sigma_9=E*[-eta -mu eta mu]*D_9/l_9;
 %% Fuerzas 
-N_1=A*sigma_1;
-N_2=A*sigma_2;
-N_3=A*sigma_3;
-N_4=A*sigma_4;
-N_5=A*sigma_5;
-N_6=A*sigma_6;
-N_7=A*sigma_7;
-N_8=A*sigma_8;
-N_9=A*sigma_9;
+N_1=A*sigma_1
+N_2=A*sigma_2
+N_3=A*sigma_3
+N_4=A*sigma_4
+N_5=A*sigma_5
+N_6=A*sigma_6
+N_7=A*sigma_7
+N_8=A*sigma_8
+N_9=A*sigma_9
 %% Plotear Deformacion
 XY=zeros(6,2);
 XY(1,:)=[0 0];
