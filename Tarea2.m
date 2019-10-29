@@ -57,6 +57,19 @@ for j= (n-m+1):n
     xy(j,2)= altura;
 end
 
+
+% for i=2:(n-m)
+%     xy(i,1)= longitud*(i-1);
+% end
+% 
+% for j= (n-m+1):n
+%     xy(j,1)= (j-(n-m))*longitud;
+% end
+% 
+% for j= (n-m+1):n
+%     xy(j,2)= altura;
+% end
+
 %% angulos de las barras y longitd barra inclinada
 angulo1 = 0;
 angulo2 = atand(altura/longitud);
