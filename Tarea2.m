@@ -57,19 +57,25 @@ for j= (n-m+1):n
     xy(j,2)= altura;
 end
 
+XY = zeros(n, 2);
 
-% for i=2:(n-m)
-%     xy(i,1)= longitud*(i-1);
-% end
-% 
-% for j= (n-m+1):n
-%     xy(j,1)= (j-(n-m))*longitud;
-% end
-% 
-% for j= (n-m+1):n
-%     xy(j,2)= altura;
-% end
-
+%ordenando coordenadas
+if(tramos> 0)
+    for j= 1:tramos
+        XY(3,:)= xy((n-tramos),:);
+        if(j< tramos)
+            XY(3+2*j,:)= xy(n-tramos+j,:);
+        elseif(j==tramos)
+            XY(3+2*j,:)= xy(n,:);
+        end
+    end
+elseif(tramos==0)
+    XY(1,:)= xy(1,:);
+    XY(2,:)= xy(2,:);
+    XY(3,:)= xy(4,:);
+    XY(4,:)= xy(3,:);     
+end
+    
 %% angulos de las barras y longitd barra inclinada
 angulo1 = 0;
 angulo2 = atand(altura/longitud);
@@ -77,7 +83,6 @@ angulo3 = 90;
 inclinada= sqrt(altura^2+longitud^2);
 
 %% Angulos de las barras de la armadura
-
 if(tramos ==0)
     barras = 5;
 elseif(tramos>0)
@@ -112,7 +117,7 @@ for i = 1:3
         
 end
 
-%% Longitdud de cada barra
+%% Longitdud de cada barra, grados de libertad
 
 if(tramos ==0)
     barras = 5;
@@ -221,16 +226,39 @@ end
 
 %% Plotear deformacion
 
-xydef = zeros(size(xy));
+xydef = zeros(size(XY));
 fac = 500;
 c=0;
 
 for i =1:6
     c=c+1;
-    xydef(i,1)= xy(i,1)+fac*D(c);
+    xydef(i,1)= XY(i,1)+fac*D(c);
     c=c+1;
-    xydef()= xy()+fac*D(c);   
+    xydef(i+2)= XY(i,2)+fac*D(c);   
 end
+
+IJ= zeros(n,2);
+
+for i= 1:3
+    if(i==1)
+        IJ(1,:)= [1 2];
+        IJ(2,:)= [1 3];
+        IJ(3,:)= [2 3];
+        IJ(4,:)= [2 4];
+    elseif(i==2)&&(tramos>0)
+        for j= 1:tramos
+            IJ(4*j+1,:)=[j+2, j+3];
+            IJ(4*j+2,:)=[j+2, j+4];
+            IJ(4*j+3,:)=[j+3, j+4];
+            IJ(4*j+4,:)=[j+3, j+5];
+        end
+    elseif(i==3)
+        IJ(barras,:)=[n-1 n];
+    end
+end
+
+
+
 %% Funciones
 
  function [sigma_xx]=sigma_x(beta, E, D_x, L)
