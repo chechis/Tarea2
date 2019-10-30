@@ -60,15 +60,20 @@ end
 XY = zeros(n, 2);
 
 %ordenando coordenadas
+
 if(tramos> 0)
+    XY(1,:)= xy(1,:);
+    XY(2,:)= xy(2,:);
     for j= 1:tramos
         XY(3,:)= xy((n-tramos),:);
+        XY(2*j+2,:)=xy(j+2,:);
         if(j< tramos)
             XY(3+2*j,:)= xy(n-tramos+j,:);
         elseif(j==tramos)
             XY(3+2*j,:)= xy(n,:);
         end
     end
+    XY(n,:)= xy(n-1-tramos,:);
 elseif(tramos==0)
     XY(1,:)= xy(1,:);
     XY(2,:)= xy(2,:);
@@ -230,11 +235,11 @@ xydef = zeros(size(XY));
 fac = 500;
 c=0;
 
-for i =1:6
+for i =1:n
     c=c+1;
     xydef(i,1)= XY(i,1)+fac*D(c);
     c=c+1;
-    xydef(i+2)= XY(i,2)+fac*D(c);   
+    xydef(i,2)= XY(i,2)+fac*D(c);   
 end
 
 IJ= zeros(n,2);
@@ -256,18 +261,26 @@ for i= 1:3
         IJ(barras,:)=[n-1 n];
     end
 end
+%% plotear
 
-
-
+for e=1:9
+Q=[XY(IJ(e,1),1) XY(IJ(e,1),2);...
+XY(IJ(e,2),1) XY(IJ(e,2),2)];
+Qdef=[xydef(IJ(e,1),1) xydef(IJ(e,1),2);...
+xydef(IJ(e,2),1) xydef(IJ(e,2),2)];
+plot(Q(:,1),Q(:,2),'--b',Qdef(:,1),Qdef(:,2),'-r')
+hold on
+end
+xlabel('x')
+ylabel('y')
+axis equal
 %% Funciones
-
  function [sigma_xx]=sigma_x(beta, E, D_x, L)
 
     eta=cosd(beta);
     mu = sind(beta);
     sigma_xx= E*[-eta -mu eta mu]*D_x/L;
  end
-
 function [k]=barraAxial(E,A,Le)
 
     k=E*A/Le*[1 0 -1 0
@@ -275,7 +288,6 @@ function [k]=barraAxial(E,A,Le)
           -1 0 1 0
           0 0 0 0];
 end
- 
 function [t]=t_xx(ang_x)
 
     eta=cosd(ang_x);
@@ -283,4 +295,3 @@ function [t]=t_xx(ang_x)
     t=[eta mu 0 0; -mu eta 0 0;
         0 0 eta mu; 0 0 -mu eta];
 end
- 
