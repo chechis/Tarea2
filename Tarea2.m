@@ -3,15 +3,10 @@ clear all
 clc
 
 %% ingresando datos
-% elasticidad = input('Ingrese el modulo de eslasticidad: ');
-% area = input('Ingrese el area: ');
-% longitud = input('Ingrese la longitud: ');
-% altura = input('Ingrese la altura del puente: ');
-
-elasticidad = 2e8;
-area = 0.005;
-longitud = 4;
-altura = 3;
+elasticidad = input('Ingrese el modulo de eslasticidad: ');
+area = input('Ingrese el area: ');
+longitud = input('Ingrese la longitud: ');
+altura = input('Ingrese la altura del puente: ');
 
 tramos = input('Ingrese la cantidad de tramos: ');
 
@@ -22,17 +17,15 @@ elseif(tramos>0)
     n = 4+2*tramos;
 end
 
-p=[0 0 0 0 4 -20 0 0 0 -20 0 0]';
-
-% cantidadCargas = input('Ingrese la cantidad de cargas: ');
-% p= zeros(1, n*2);
-% for i = 1:cantidadCargas
-%    
-%     carga = input ('Ingrese la carga: ');
-%     cargaPos=input ('Ingrese la posicion de la carga en el gdl: ');
-%     p(1, cargaPos)= carga;
-%     
-% end
+cantidadCargas = input('Ingrese la cantidad de cargas: ');
+p= zeros(1, n*2)';
+for i = 1:cantidadCargas
+   
+    carga = input ('Ingrese la carga: ');
+    cargaPos=input ('Ingrese la posicion de la carga en el gdl: ');
+    p(cargaPos, 1)= carga;
+    
+end
 
 gdl= zeros(n,2);
 
@@ -232,7 +225,7 @@ end
 %% Plotear deformacion
 
 xydef = zeros(size(XY));
-fac = 500;
+fac = input('Ingrese el factor, para observar la deformacion: ');
 c=0;
 
 for i =1:n
@@ -242,28 +235,17 @@ for i =1:n
     xydef(i,2)= XY(i,2)+fac*D(c);   
 end
 
-IJ= zeros(n,2);
+IJ= zeros(barras,2);
 
-for i= 1:3
-    if(i==1)
-        IJ(1,:)= [1 2];
-        IJ(2,:)= [1 3];
-        IJ(3,:)= [2 3];
-        IJ(4,:)= [2 4];
-    elseif(i==2)&&(tramos>0)
-        for j= 1:tramos
-            IJ(4*j+1,:)=[j+2, j+3];
-            IJ(4*j+2,:)=[j+2, j+4];
-            IJ(4*j+3,:)=[j+3, j+4];
-            IJ(4*j+4,:)=[j+3, j+5];
-        end
-    elseif(i==3)
-        IJ(barras,:)=[n-1 n];
-    end
+for i= 1:(barras-1)/2
+    IJ(2*i-1,:)= [i i+1];
+    IJ(2*i,:)=[i i+2];
 end
+IJ(barras,:)=[n-1 n];
+
 %% plotear
 
-for e=1:9
+for e=1:barras
 Q=[XY(IJ(e,1),1) XY(IJ(e,1),2);...
 XY(IJ(e,2),1) XY(IJ(e,2),2)];
 Qdef=[xydef(IJ(e,1),1) xydef(IJ(e,1),2);...
